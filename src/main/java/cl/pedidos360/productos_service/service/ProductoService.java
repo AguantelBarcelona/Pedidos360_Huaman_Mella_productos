@@ -50,7 +50,6 @@ public class ProductoService {
         existente.setMarca(datos.getMarca());
         existente.setTalla(datos.getTalla());
         existente.setPrecio(datos.getPrecio());
-        existente.setStock(datos.getStock());
         existente.setCategoria(datos.getCategoria());
         existente.setDescripcion(datos.getDescripcion());
 

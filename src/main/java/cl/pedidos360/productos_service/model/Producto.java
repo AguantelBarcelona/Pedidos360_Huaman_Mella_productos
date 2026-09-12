@@ -34,15 +34,11 @@ public class Producto {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
-    @NotNull(message = "El stock es obligatorio")
-    @Min(value = 0, message = "El stock no puede ser negativo")
-    @Column(nullable = false)
-    private Integer stock;
-
     @NotBlank(message = "La categoría es obligatoria")
     @Column(nullable = false)
     private String categoria;
 
+    @Column(length = 500)
     private String descripcion;
 
     public Producto() {
@@ -54,7 +50,6 @@ public class Producto {
             String marca,
             Integer talla,
             BigDecimal precio,
-            Integer stock,
             String categoria,
             String descripcion) {
 
@@ -63,7 +58,6 @@ public class Producto {
         this.marca = marca;
         this.talla = talla;
         this.precio = precio;
-        this.stock = stock;
         this.categoria = categoria;
         this.descripcion = descripcion;
     }
@@ -106,14 +100,6 @@ public class Producto {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
     }
 
     public String getCategoria() {

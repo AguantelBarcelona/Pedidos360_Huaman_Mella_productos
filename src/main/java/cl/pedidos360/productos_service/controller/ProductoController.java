@@ -3,9 +3,10 @@ package cl.pedidos360.productos_service.controller;
 import cl.pedidos360.productos_service.model.Producto;
 import cl.pedidos360.productos_service.service.ProductoService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,50 +19,85 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
+    /**
+     * Obtiene todos los productos disponibles en el catálogo.
+     */
     @GetMapping
-    public List<Producto> listar() {
-        return productoService.listarTodos();
+    public ResponseEntity<List<Producto>> listar() {
+        return ResponseEntity.ok(productoService.listarTodos());
     }
 
+    /**
+     * Obtiene un producto específico mediante su ID.
+     */
     @GetMapping("/{id}")
-    public Producto obtener(@PathVariable Long id) {
-        return productoService.buscarPorId(id);
+    public ResponseEntity<Producto> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(productoService.buscarPorId(id));
     }
 
+    /**
+     * Filtra productos por marca.
+     */
     @GetMapping("/marca/{marca}")
-    public List<Producto> porMarca(
+    public ResponseEntity<List<Producto>> porMarca(
             @PathVariable String marca) {
 
-        return productoService.buscarPorMarca(marca);
+        return ResponseEntity.ok(
+                productoService.buscarPorMarca(marca)
+        );
     }
 
+    /**
+     * Filtra productos por categoría.
+     */
     @GetMapping("/categoria/{categoria}")
-    public List<Producto> porCategoria(
+    public ResponseEntity<List<Producto>> porCategoria(
             @PathVariable String categoria) {
 
-        return productoService.buscarPorCategoria(categoria);
+        return ResponseEntity.ok(
+                productoService.buscarPorCategoria(categoria)
+        );
     }
 
+    /**
+     * Crea un nuevo producto.
+     */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Producto crear(
+    public ResponseEntity<Producto> crear(
             @Valid @RequestBody Producto producto) {
 
-        return productoService.crear(producto);
+        Producto nuevoProducto = productoService.crear(producto);
+
+        URI ubicacion = URI.create(
+                "/api/productos/" + nuevoProducto.getId()
+        );
+
+        return ResponseEntity
+                .created(ubicacion)
+                .body(nuevoProducto);
     }
 
+    /**
+     * Actualiza completamente un producto existente.
+     */
     @PutMapping("/{id}")
-    public Producto actualizar(
+    public ResponseEntity<Producto> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody Producto producto) {
 
-        return productoService.actualizar(id, producto);
+        return ResponseEntity.ok(
+                productoService.actualizar(id, producto)
+        );
     }
 
+    /**
+     * Elimina un producto existente.
+     */
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
 
         productoService.eliminar(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
